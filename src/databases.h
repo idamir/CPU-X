@@ -1,5 +1,5 @@
 /****************************************************************************
-*    Copyright © 2014-2023 The Tumultuous Unicorn Of Darkness
+*    Copyright © 2014-2024 The Tumultuous Unicorn Of Darkness
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ typedef struct
 	const char    *process;
 } Technology_DB;
 
-const Technology_DB technology_unknown[] = { { -1, -1, -1, NULL } };
+const Technology_DB technology_unknown[] = { { -2, -2, -2, NULL } };
 
 const Technology_DB technology_intel[] =
 {
@@ -52,7 +52,7 @@ const Technology_DB technology_intel[] =
 	{  5,          37,          -1,          "32 nm" }, // Westmere
 	{  5,          53,          -1,          "32 nm" }, // Atom Cloverview
 	{  5,          69,          -1,          "22 nm" }, // Haswell
-	{  5,          85,          -1,          "14 nm" }, // Skylake (Xeon Scalable)
+	{  5,          85,          -1,          "14 nm" }, // Skylake-X / Skylake-W / Skylake-DE / Skylake-SP / Cascade Lake-X / Cascade Lake-W / Cascade Lake-SP
 	{  5,          165,          6,          "14 nm" }, // Comet Lake
 	{  6,           6,           6,        "0.25 µm" }, // PII Dixon / Celeron Mendocino
 	{  6,           6,          15,          "65 nm" }, // P4 Cedar Mill / PD Presler
@@ -67,7 +67,7 @@ const Technology_DB technology_intel[] =
 	{  7,          71,          -1,          "14 nm" }, // Broadwell
 	{  7,         151,          -1,        "Intel 7" }, // Alder Lake-S / Alder Lake-HX
 	{  7,         167,          -1,          "14 nm" }, // Rocket Lake
-	{  7,         183,          -1,        "Intel 7" }, // Raptor Lake-S
+	{  7,         183,          -1,        "Intel 7" }, // Raptor Lake-S / Raptor Lake-HX
 	{  8,           0,           0,        "0.18 µm" }, // PIII Coppermine-T
 	{  8,           8,          -1,        "0.18 µm" }, // PIII Coppermine
 	{  9,           9,          -1,        "0.13 µm" }, // Pentium M Banias
@@ -75,15 +75,17 @@ const Technology_DB technology_intel[] =
 	{ 10,          30,          -1,          "45 nm" }, // Nehalem
 	{ 10,          42,          -1,          "32 nm" }, // Sandy Bridge
 	{ 10,          58,          -1,          "22 nm" }, // Ivy Bridge
+	{ 10,         106,          -1,          "10 nm" }, // Ice Lake-D / Ice Lake-W / Ice Lake-SP
 	{ 10,         122,          -1,          "14 nm" }, // Gemini Lake
 	{ 10,         138,          -1,          "10 nm" }, // Tremont (Lakefield)
 	{ 10,         154,          -1,        "Intel 7" }, // Alder Lake-P / Alder Lake-H
-	{ 10,         186,          -1,        "Intel 7" }, // Raptor Lake-P / Raptor Lake-U
+	{ 10,         186,          -1,        "Intel 7" }, // Raptor Lake-P / Raptor Lake-U / Raptor Lake-H
 	{ 11,          11,          -1,        "0.13 µm" }, // PIII Tualatine
 	{ 12,          28,          -1,          "45 nm" }, // Atom Diamondville / Pineview / Silverthorne
 	{ 12,          44,          -1,          "32 nm" }, // Westmere
 	{ 12,          60,          -1,          "22 nm" }, // Haswell
 	{ 12,          76,          -1,          "14 nm" }, // Atom Cherry Trail
+	{ 12,          92,          -1,          "14 nm" }, // Apollo Lake
 	{ 12,         108,          -1,          "10 nm" }, // Ice Lake
 	{ 12,         140,          -1,           "10SF" }, // Tiger Lake
 	{ 12,         156,          -1,          "10 nm" }, // Tremont (Jasper Lake)
@@ -103,7 +105,7 @@ const Technology_DB technology_intel[] =
 	{ 15,          15,          -1,          "65 nm" }, // C2 Conroe / Allendale / Kentsfield / Merom
 	{ 15,          63,          -1,          "22 nm" }, // Haswell-E
 	{ 15,          79,          -1,          "14 nm" }, // Broadwell-E
-	{ 15,         143,          -1,        "Intel 7" }, // Sapphire Rapids-WS
+	{ 15,         143,          -1,        "Intel 7" }, // Sapphire Rapids-WS / Sapphire Rapids-SP
 	{ 15,         191,          -1,        "Intel 7" }, // Raptor Lake-S ("Golden Cove" cores)
 	{ -2,          -2,          -2,             NULL }
 	//Model        E. Model     E. Family   Process
@@ -158,8 +160,12 @@ const Technology_DB technology_amd[] =
 	{ -1,          80,          25,           "7 nm" }, // Zen 3 (Cezanne)
 	{ -1,           1,          25,           "7 nm" }, // Zen 3 (Milan)
 	{ -1,          68,          25,           "7 nm" }, // Zen 3 (Rembrandt)
-	{ -1,          97,          25,           "5 nm" }, // Zen 4 (Raphael)
+	{ -1,           8,          25,           "7 nm" }, // Zen 3 (Chagall)
+	{ -1,          24,          25,           "5 nm" }, // Zen 4 (Storm Peak)
+	{ -1,          97,          25,           "5 nm" }, // Zen 4 (Raphael/Dragon Range)
 	{ -1,          17,          25,           "5 nm" }, // Zen 4 (Genoa)
+	{ -1,         116,          25,           "5 nm" }, // Zen 4 (Phoenix)
+	{ -1,         120,          25,           "4 nm" }, // Zen 4 (Z1)
 	{ -2,          -2,          -2,             NULL }
 	//Model        E. Model     E. Family   Process
 };
@@ -184,21 +190,27 @@ const Package_DB package_intel[] =
 	{ "Bloomfield",                     NULL,                               "LGA 1366"       },
 	{ NULL,                             "Intel(R) Core(TM)2 Duo CPU E7400", "LGA 775"        },
 	{ NULL,                             "Intel(R) Core(TM)2 Quad CPU Q6600","LGA 775"        },
+	{ NULL,                             "Intel(R) Core(TM) i5-2500K CPU",   "LGA 1155"       },
+	{ NULL,                             "Intel(R) Celeron(R) CPU G550T",    "LGA 1155"       },
 	{ NULL,                             "Intel(R) Core(TM) i5-2520M CPU",   "rPGA 988B"      },
 	{ NULL,                             "Intel(R) Xeon(R) CPU E31275",      "LGA 1155"       },
 	{ NULL,                             "Intel(R) Core(TM) i7-2860QM CPU",  "rPGA 988B"      },
 	{ NULL,                             "Intel(R) Core(TM) i7-3740QM CPU",  "rPGA 988B"      },
 	{ NULL,                             "Intel(R) Core(TM) i5-4300U CPU",   "FCBGA 1168"     },
 	{ NULL,                             "Intel(R) Core(TM) i7-4600U CPU",   "FCBGA 1168"     },
+	{ NULL,                             "Intel(R) Core(TM) i7-4790 CPU",    "LGA 1150"       },
 	{ NULL,                             "Intel(R) Core(TM) i7-5775C CPU",   "LGA 1150"       },
 	{ NULL,                             "Intel(R) Core(TM) i7-6560U CPU",   "FCBGA 1356"     },
+	{ NULL,                             "Intel(R) Core(TM) i5-6400 CPU",    "LGA 1151"       },
 	{ NULL,                             "Intel(R) Core(TM) i7-7300U CPU",   "FCBGA 1356"     },
+	{ NULL,                             "Intel(R) Core(TM) i7-7820HQ CPU",  "FCBGA 1440"     },
 	{ NULL,                             "Intel(R) Core(TM) i7-8250U CPU",   "FCBGA 1356"     },
 	{ NULL,                             "Intel(R) Core(TM) i7-8350U CPU",   "FCBGA 1356"     },
 	{ NULL,                             "Intel(R) Core(TM) i7-8550U CPU",   "FCBGA 1356"     },
 	{ NULL,                             "Intel(R) Core(TM) i7-8650U CPU",   "FCBGA 1356"     },
 	{ NULL,                             "Intel(R) Core(TM) i5-9300H CPU",   "FCBGA 1440"     },
 	{ NULL,                             "Intel(R) Core(TM) i9-9900K CPU",   "LGA 1151"       },
+	{ NULL,                             "Intel(R) Core(TM) i5-10500 CPU",   "LGA 1200"       },
 	{ NULL,                             "Intel(R) Core(TM) i5-1135G7",      "FCBGA 1449"     },
 	{ NULL,                             "Intel(R) Core(TM) i7-1165G7",      "FCBGA 1449"     },
 	{ NULL,                             "Intel(R) Core(TM) i7-11700K",      "LGA 1200"       },
@@ -211,6 +223,7 @@ const Package_DB package_intel[] =
 	{ NULL,                             "Intel(R) Core(TM) i5-13600K",      "LGA 1700"       },
 	{ NULL,                             "Intel(R) Core(TM) i7-13700K",      "LGA 1700"       },
 	{ NULL,                             "Intel(R) Core(TM) i9-13900K",      "LGA 1700"       },
+	{ NULL,                             "Intel(R) Celeron(R) CPU N2930",    "FCBGA 1170"     },
 	{ NULL,                             "Intel(R) Celeron(R) CPU N3350",    "FCBGA 1296"     },
 	{ NULL,	                            "Intel(R) Celeron(R) N4000",        "FCBGA 1090"     },
 	{ NULL,                             "Intel(R) Core(TM) i5-3470 CPU",    "LGA 1155"       },
@@ -240,28 +253,35 @@ const Package_DB package_amd[] =
 	{ "Zambezi",                        NULL,            "AM3+ (PGA-942)" },
 	{ "Vishera",                        NULL,            "AM3+ (PGA-942)" },
 	/* Zen */
-	{ "Raven Ridge",                    NULL,            "FP5 (BGA-1140)"   },
-	{ "Summit Ridge",                   NULL,            "AM4 (PGA-1331)"   },
-	{ "Whitehaven",                     NULL,            "SP3r2 (LGA-4094)" },
 	{ "Naples",                         NULL,            "SP3 (LGA-4094)"   },
+	{ "Whitehaven",                     NULL,            "SP3r2 (LGA-4094)" },
+	{ "Summit Ridge",                   NULL,            "AM4 (PGA-1331)"   },
+	{ "Raven Ridge",                    NULL,            "FP5 (BGA-1140)"   },
+	{ "Dali",                           NULL,            "FP5 (BGA-1140)"   },
 	/* Zen+ */
-	{ "Picasso",                        NULL,            "FP5 (BGA-1140)"   },
-	{ "Pinnacle Ridge",                 NULL,            "AM4 (PGA-1331)"   },
 	{ "Colfax",                         NULL,            "SP3r2 (LGA-4094)" },
+	{ "Pinnacle Ridge",                 NULL,            "AM4 (PGA-1331)"   },
+	{ "Picasso",                        NULL,            "FP5 (BGA-1140)"   },
 	/* Zen 2 */
+	{ "Rome",                           NULL,            "SP3 (LGA-4094)"   },
+	{ "Castle Peak",                    NULL,            "SP3r2 (LGA-4094)" },
+	{ "Matisse",                        NULL,            "AM4 (PGA-1331)"   },
 	{ "Renoir",                         NULL,            "FP6 (BGA-1140)"   },
 	{ "Lucienne",                       NULL,            "FP6 (BGA-1140)"   },
-	{ "Matisse",                        NULL,            "AM4 (PGA-1331)"   },
-	{ "Castle Peak",                    NULL,            "SP3r2 (LGA-4094)" },
-	{ "Rome",                           NULL,            "SP3 (LGA-4094)"   },
 	{ "Mendocino",                      NULL,            "FT6 (BGA)"        },
 	/* Zen 3 */
-	{ "Cezanne",                        NULL,            "FP6 (BGA-1140)"   },
-	{ "Vermeer",                        NULL,            "AM4 (PGA-1331)"   },
 	{ "Milan",                          NULL,            "SP3 (LGA-4094)"   },
-	{ "Raphael",                        NULL,            "AM5 (LGA-1718)"   },
+	{ "Chagall",                        NULL,            "sWRX8 (LGA-4094)" },
+	{ "Vermeer",                        NULL,            "AM4 (PGA-1331)"   },
+	{ "Cezanne",                        NULL,            "FP6 (BGA-1140)"   },
 	/* Zen 3+ */
 	{ "Rembrandt",                      NULL,            "FP7 (BGA-1140)"   },
+	/* Zen 4 */
+	{ "Genoa",                          NULL,            "SP5 (LGA-6096)"   },
+	{ "Storm Peak",                     NULL,            "sTR5 (LGA-4844)"  },
+	{ "Raphael",                        NULL,            "AM5 (LGA-1718)"   },
+	{ "Dragon Range",                   NULL,            "FL1 (BGA)"        },
+	{ "Phoenix",                        NULL,            "FP7/FP8"          },
 	{ NULL,                             NULL,            NULL               }
 	//Codename                          Model            Socket
 };

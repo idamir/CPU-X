@@ -14,10 +14,10 @@
 
 **CPU-X** is a Free software that gathers information on CPU, motherboard and more.  
 CPU-X is a system profiling and monitoring application (similar to [CPU-Z for Windows](https://www.cpuid.com/softwares/cpu-z.html)), but CPU-X is a Free and Open Source software designed for GNU/Linux and FreeBSD.  
-This software is written in C and built with [CMake](https://www.cmake.org/) tool.  
+This software is written in C++ and built with [CMake](https://www.cmake.org/) tool.  
 It can be used in graphical mode by using GTK or in text-based mode by using NCurses. A dump mode is present from command line.  
 
-**:warning: There is no major plans for the future, see [this announcement](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/wiki/future-of-project).**
+**:warning: There are no milestones for this project, read [this announcement](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/wiki/future-of-project) for more details.**
 
 ***
 
@@ -30,6 +30,7 @@ It can be used in graphical mode by using GTK or in text-based mode by using NCu
   - [Download and install](#download-and-install)
     - [From repositories](#from-repositories)
     - [From GitHub releases](#from-github-releases)
+    - [From Flathub](#from-flathub)
     - [Manual build](#manual-build)
   - [Usage](#usage)
   - [Wiki](#wiki)
@@ -43,23 +44,25 @@ It can be used in graphical mode by using GTK or in text-based mode by using NCu
 ### Build-only dependencies
 
 These dependencies are needed to **build** CPU-X:
-* A C compiler ([GCC](https://gcc.gnu.org/) or [Clang](https://clang.llvm.org/))
+* A C++ compiler ([GCC](https://gcc.gnu.org/) or [Clang](https://clang.llvm.org/))
 * [CMake](https://www.cmake.org/)
 * [Pkg-Config](https://www.freedesktop.org/wiki/Software/pkg-config/) / [Pkgconf](https://github.com/pkgconf/pkgconf)
 * [NASM](https://www.nasm.us/)
 
 ### Test dependencies
 
-These dependencies are needed to **test** CPU-X:
+These dependencies are optional to **test** CPU-X:
 * [Grep](https://www.gnu.org/software/grep/)
-* [GNU Awk](https://www.gnu.org/software/gawk/)
-* [Mawk](https://invisible-island.net/mawk/)
-* [One true awk](https://github.com/onetrueawk/awk)
+* [GNU Awk¹](https://www.gnu.org/software/gawk/)
+* [Mawk¹](https://invisible-island.net/mawk/)
+* [One true awk¹](https://github.com/onetrueawk/awk)
+
+**¹**At least on Awk is required, e.g. the default Awk on the system.
 
 ### Build and run dependencies
 
-These dependencies are needed to **build¹** and **run** CPU-X:
-* [GTK3+](https://www.gtk.org/) (version 3.12 or newer is needed)  
+These dependencies are needed to **build²** and **run** CPU-X:
+* [Gtkmm3](https://www.gtkmm.org/en/index.html) (versions 3.12 to 3.24 are supported)  
 * [NCurses](https://www.gnu.org/software/ncurses/)  
 * [Libcpuid](http://libcpuid.sourceforge.net/) (version 0.6.0 or newer is needed)  
 * [Pciutils](https://mj.ucw.cz/sw/pciutils/)  
@@ -68,10 +71,9 @@ These dependencies are needed to **build¹** and **run** CPU-X:
 * [OpenCL](https://www.khronos.org/opencl/) (version 1.2 or newer is needed), **disabled by default** (enable with `-DWITH_OPENCL=1` during CMake invocation)  
 * [Procps-ng](https://sourceforge.net/projects/procps-ng/) (Linux) / [Libstatgrab](https://www.i-scream.org/libstatgrab/) (*BSD)  
 
-**¹**On some GNU/Linux distributions, the appropriate **-dev** or **-devel** package is needed.
+**²**On some GNU/Linux distributions, the appropriate **-dev** or **-devel** package is needed.
 
 ## Download and install
-
 
 ### From repositories
 
@@ -91,6 +93,10 @@ All packages:
 
 Look for **Assets** [here ![GitHub release](https://img.shields.io/github/release/TheTumultuousUnicornOfDarkness/CPU-X.svg)](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/releases/latest) for portable binary (AppImage).
 
+### From Flathub
+
+CPU-X is available [as Flatpak on Flathub](https://flathub.org/fr/apps/io.github.thetumultuousunicornofdarkness.cpu-x) since v5.0.2.
+
 ### Manual build
 
 For step-by-step guide, please read [this page](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/wiki/manual-build) on the Wiki.
@@ -98,7 +104,7 @@ For step-by-step guide, please read [this page](https://github.com/TheTumultuous
 ## Usage
 
 Application is available in menu (**System Tools** category). If you start the daemon, it will allow CPU-X to access some special devices, which provides more information and avoid empty labels.  
-The CPU-X daemon requires root privileges, and it uses Polkit for privileges escalation.
+The CPU-X daemon requires root privileges, and uses Polkit for privileges escalation.
 
 You can use `cpu-x` from command line, some options are available, like:
 - `--gtk`: to start the graphical user interface (default)
@@ -109,11 +115,12 @@ Use `--help` to see all arguments.
 
 ## Wiki
 
-More informations are available on Wiki, like screenshots, troubleshooting and tips. You can access to the Wiki with [this link](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/wiki).
+More informations are available on Wiki, like screenshots, troubleshooting and tips. You can access the Wiki by using [this link](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/wiki).
 
 ## Bugs/Improvements/Request features
 
-Please [open a new issue](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/issues/new/choose) and fill the appropriate template. Note that text between `<!-- ... -->` is not displayed.
+Please [open a new issue](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/issues/new/choose) and fill the appropriate template. Note that text between `<!-- ... -->` is not displayed.  
+:warning: **Incomplete reports may be closed without justification.**
 
 ## Translate CPU-X
 

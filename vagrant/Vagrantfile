@@ -1,13 +1,15 @@
 VAGRANTFILE_API_VERSION = "2"
 VM_CPU                  = "2"
-VM_MEMORY               = "2048"
+VM_MEMORY               = "4096"
 
 vms = {
-	"ubuntu/jammy64"   => { :name => "jammy",  :bootstrap => "ubuntu" },
-	"generic/fedora37" => { :name => "fedora", :bootstrap => "fedora" }
+	"ubuntu/jammy64"       => { :name => "jammy",  :bootstrap => "ubuntu" },
+	"fedora/38-cloud-base" => { :name => "fedora", :bootstrap => "fedora" }
 }
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+	config.ssh.disable_deprecated_algorithms = true
+
 	if Vagrant.has_plugin?("vagrant-vbguest") then
 		config.vbguest.iso_path    = "/usr/lib/virtualbox/additions/VBoxGuestAdditions.iso"
 		config.vbguest.auto_update = false
@@ -21,7 +23,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 			node.vm.synced_folder ".", "/vagrant", disabled: true
 			#node.vm.synced_folder '../', '/home/vagrant/CPU-X'
 			#node.vm.provision :shell, path: "bootstrap_" + info[:bootstrap] + ".sh"
-			node.vm.provision :shell, reboot: true, env: {"HOST_LANG" => ENV['LANG']}, path: "bootstrap_common.sh"
 
 			if Vagrant.has_plugin?("vagrant-proxyconf")
 				node.proxy.http     = ENV['HTTP_PROXY']  || ENV['http_proxy']  || ""
@@ -34,8 +35,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 				vb.cpus   = VM_CPU
 				vb.memory = VM_MEMORY
 				vb.gui    = true
-				vb.customize ["modifyvm", :id, "--vram", "128"]
+				vb.customize ["modifyvm", :id, "--vram", "128", "--clipboard-mode=bidirectional", "--drag-and-drop=bidirectional"]
 				vb.customize ["setextradata", "global", "GUI/Customizations", "noMenuBar"]
+				node.vm.provision :shell, reboot: true, env: {"HOST_LANG" => ENV['LANG']}, path: "bootstrap_common.sh", args: "virtualbox"
+			end
+
+			node.vm.provider :libvirt do |libvirt, override|
+				libvirt.cpus   = VM_CPU
+				libvirt.memory = VM_MEMORY
+				libvirt.loader = "/usr/share/edk2/x64/OVMF.4m.fd"
+				libvirt.disk_driver :cache => 'none'
+				node.vm.provision :shell, reboot: true, env: {"HOST_LANG" => ENV['LANG']}, path: "bootstrap_common.sh", args: "libvirt"
 			end
 		end
 	end

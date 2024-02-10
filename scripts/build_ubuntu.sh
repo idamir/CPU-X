@@ -16,11 +16,13 @@ fi
 BUILD_TYPE="$1"
 SRC_DIR="$2"
 if [[ $# -ge 3 ]]; then
+	# AppImage build
 	DST_DIR="$3"
-	APPIMAGE=1
+	CMAKE_EXTRA_OPTIONS=""
 else
+	# Standard build
 	DST_DIR=""
-	APPIMAGE=0
+	CMAKE_EXTRA_OPTIONS="-DWITH_OPENCL=1"
 fi
 
 case "$VERSION_ID" in
@@ -38,19 +40,29 @@ esac
 echo "Install packages"
 sudo apt-get update -y -qq
 sudo apt-get install -y -qq \
+	gcc-10 \
+	g++-10 \
 	cmake \
 	ninja-build \
 	nasm \
 	gettext \
 	adwaita-icon-theme \
 	"${PACKAGES[@]}" \
-	libgtk-3-0 \
-	libgtk-3-dev \
+	libgtkmm-3.0-1v5 \
+	libgtkmm-3.0-dev \
 	libpci-dev \
 	opencl-headers \
 	ocl-icd-libopencl1 \
 	ocl-icd-opencl-dev \
-	libprocps-dev
+	libprocps-dev \
+	dpkg-dev \
+	gawk \
+	mawk
+
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
 
 echo "Run CMake"
 cmake -S "$SRC_DIR" \
@@ -59,7 +71,7 @@ cmake -S "$SRC_DIR" \
 	-DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
 	-DCMAKE_INSTALL_PREFIX=/usr \
 	-DCMAKE_INSTALL_LIBEXECDIR=/usr/bin \
-	-DAPPIMAGE=$APPIMAGE
+	$CMAKE_EXTRA_OPTIONS
 
 echo "Build CPU-X"
 cmake --build build
